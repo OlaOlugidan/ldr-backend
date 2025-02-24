@@ -8,8 +8,13 @@ const morgan = require('morgan');
 const app = express();
 
 // Middleware Configuration
-app.use(express.json()); // Parse JSON bodies
-app.use(cors());         // Enable CORS for all origins
+app.use(express.json()); // Parse JSON bodies       // Enable CORS for all origins
+app.use(cors({
+  origin: "*", // Allow all domains (for development)
+  methods: "GET,POST,PUT,DELETE",
+  allowedHeaders: "Content-Type,Authorization"
+}));
+
 app.use(morgan('combined')); // Logging HTTP requests
 
 // Routes
