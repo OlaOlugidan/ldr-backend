@@ -28,6 +28,11 @@ app.use('/api/payments', paymentRoutes);
 const errorHandler = require('./middlewares/errorHandler');
 app.use(errorHandler);
 
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running successfully!" });
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
