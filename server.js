@@ -9,6 +9,13 @@ const app = express();
 
 // Middleware Configuration
 app.use(express.json()); // Parse JSON bodies       // Enable CORS for all origins
+
+//Test route to check API
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Test API is working!" });
+});
+
+
 app.use(cors({
   origin: "*", // Allow all domains (for development)
   methods: "GET,POST,PUT,DELETE",
@@ -18,6 +25,11 @@ app.use(cors({
 app.use(morgan('combined')); // Logging HTTP requests
 
 // Routes
+
+const testRoutes = require('./routes/test'); // adjust path as needed
+app.use('/api', testRoutes);
+
+
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
@@ -33,9 +45,6 @@ app.use('/api/payments', paymentRoutes);
 const errorHandler = require('./middlewares/errorHandler');
 app.use(errorHandler);
 
-app.get("/", (req, res) => {
-  res.json({ message: "Backend is running successfully!" });
-});
 
 
 const PORT = process.env.PORT || 3000;
