@@ -7,45 +7,40 @@ const morgan = require('morgan');
 
 const app = express();
 
-// Middleware Configuration
-app.use(express.json()); // Parse JSON bodies       // Enable CORS for all origins
-
-//Test route to check API
-app.get("/api/test", (req, res) => {
-  res.json({ message: "Test API is working!" });
-});
-
-
+// Enable CORS for all origins BEFORE any route definitions
 app.use(cors({
   origin: "*", // Allow all domains (for development)
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type,Authorization"
 }));
 
-app.use(morgan('combined')); // Logging HTTP requests
+// Parse JSON bodies
+app.use(express.json());
 
-// Routes
+// Logging HTTP requests
+app.use(morgan('combined'));
 
-const testRoutes = require('./routes/test'); // adjust path as needed
-app.use('/api', testRoutes);
+// Test route to check API
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Test API is working!" });
+});
 
+// (Optional) Comment out external test routes temporarily for debugging
+// const testRoutes = require('./routes/test');
+// app.use('/api', testRoutes);
 
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
-// Load API routes
 const apiRoutes = require('./routes/apiRoutes');
 app.use('/api', apiRoutes);
 
-// Payment Routes
 const paymentRoutes = require('./routes/paymentRoutes');
 app.use('/api/payments', paymentRoutes);
 
-// server.js (after routes)
+// Error handling middleware should be last
 const errorHandler = require('./middlewares/errorHandler');
 app.use(errorHandler);
-
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
